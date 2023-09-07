@@ -1,66 +1,41 @@
-## Foundry
+# Over collateralized algorithm stable coin
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+It is similar to MakerDAO's DAI
 
-Foundry consists of:
+1. (Relative Stablity) Anchored or Pegged -> $1.00
+    1. Chainlink Price Feed.
+    2. Set a function to exchange ETH & BTC -> $$
+2. Stablity Mechanism (Minting): Algorithm (Decentralized)
+    1. People can only mint the stablecoin with enough collateral (coded)
+3. Collateral: Exogenous (Crypto)
+    1. wETH
+    2. wBTC
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-## Documentation
+- calculate health factor function
+- set health factor if debt is 0
+- 
 
-https://book.getfoundry.sh/
 
-## Usage
+- Fuzz/Invariant Testing
+    1. What are our invariants/properties?
 
-### Build
+in Foundry: 
 
-```shell
-$ forge build
-```
+Foundry fuzzing = stateless fuzzing
+Foundry invariant = stateful fuzzing
 
-### Test
+Fuzz tests = Random Data to one function
+Invariant tests = Random Data & Random function calls to many functions
 
-```shell
-$ forge test
-```
 
-### Format
+stafefull fuzz: use "invariant_" keyword for function
 
-```shell
-$ forge fmt
-```
+import {StdInvariant} from "forge-std/StdInvariant.sol";
+function invariant_testXXX() public {}
 
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+set fuzz test params in foundry.toml
+[invariant]
+runs = 1000
+depth = 128
+fail_on_revert = true // this will narrow down function calls
